@@ -1,8 +1,8 @@
 """Time series forecasting for inflation."""
 
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
-from typing import Any, Literal, Optional
+from datetime import datetime
+from typing import Any, Literal
 
 import numpy as np
 import pandas as pd
@@ -67,8 +67,8 @@ class BacktestResult:
     """Result of backtesting a forecast model."""
 
     model_type: str = ""
-    test_period_start: Optional[datetime] = None
-    test_period_end: Optional[datetime] = None
+    test_period_start: datetime | None = None
+    test_period_end: datetime | None = None
     rmse: float = 0.0
     mae: float = 0.0
     mape: float = 0.0
@@ -105,7 +105,7 @@ class InflationForecaster:
         """Initialize the forecaster."""
         self.config = config or ForecastConfig()
         self._fitted_model = None
-        self._training_data: Optional[pd.Series] = None
+        self._training_data: pd.Series | None = None
 
     def fit(self, data, target_column="inflation_rate", date_column="date"):
         """Fit the forecasting model to historical data."""
@@ -450,7 +450,7 @@ class InflationForecaster:
                     y=hist_data.values,
                     mode="lines",
                     name="Historical",
-                    line=dict(color="blue"),
+                    line={"color": "blue"},
                 )
             )
 
@@ -461,7 +461,7 @@ class InflationForecaster:
                     y=forecast.values,
                     mode="lines",
                     name="Forecast",
-                    line=dict(color="red", dash="dash"),
+                    line={"color": "red", "dash": "dash"},
                 )
             )
 
@@ -472,7 +472,7 @@ class InflationForecaster:
                     y=forecast.confidence_upper + forecast.confidence_lower[::-1],
                     fill="toself",
                     fillcolor="rgba(255, 0, 0, 0.2)",
-                    line=dict(color="rgba(255,255,255,0)"),
+                    line={"color": "rgba(255,255,255,0)"},
                     name=f"{self.config.confidence_level:.0%} CI",
                 )
             )
@@ -541,6 +541,7 @@ def main():
         forecast.values,
         forecast.confidence_lower,
         forecast.confidence_upper,
+        strict=False,
     ):
         print(f"  {date.strftime('%Y-%m')}: {value:.2f}% [{lower:.2f}, {upper:.2f}]")
 

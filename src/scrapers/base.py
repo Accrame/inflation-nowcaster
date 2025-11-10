@@ -4,17 +4,19 @@ import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 from urllib.parse import urlparse
 
 import requests
 from bs4 import BeautifulSoup
 from loguru import logger
 from pydantic import BaseModel, Field, validator
-from tenacity import retry
-from tenacity import retry_if_exception_type
-from tenacity import stop_after_attempt
-from tenacity import wait_exponential
+from tenacity import (
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential,
+)
 
 
 class PriceData(BaseModel):
@@ -23,18 +25,18 @@ class PriceData(BaseModel):
     product_id: str = Field(..., min_length=1)
     product_name: str = Field(..., min_length=1)
     price: float = Field(..., gt=0)
-    original_price: Optional[float] = Field(None, gt=0)
+    original_price: float | None = Field(None, gt=0)
     currency: str = Field(default="USD")
     category: str = Field(..., min_length=1)
-    subcategory: Optional[str] = None
+    subcategory: str | None = None
     retailer: str = Field(..., min_length=1)
     url: str = Field(...)
     timestamp: datetime = Field(default_factory=datetime.utcnow)
-    unit: Optional[str] = None
-    quantity: Optional[float] = Field(None, gt=0)
+    unit: str | None = None
+    quantity: float | None = Field(None, gt=0)
     in_stock: bool = True
-    rating: Optional[float] = Field(None, ge=0, le=5)
-    review_count: Optional[int] = Field(None, ge=0)
+    rating: float | None = Field(None, ge=0, le=5)
+    review_count: int | None = Field(None, ge=0)
     metadata: dict[str, Any] = Field(default_factory=dict)
 
     @validator("price", "original_price", pre=True)
@@ -100,7 +102,7 @@ class ScraperConfig(BaseModel):
     user_agent: str = Field(
         default="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
     )
-    proxy: Optional[str] = None
+    proxy: str | None = None
     verify_ssl: bool = True
     headers: dict[str, str] = Field(default_factory=dict)
 

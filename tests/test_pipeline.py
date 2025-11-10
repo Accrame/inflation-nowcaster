@@ -1,21 +1,17 @@
 """Tests for the inflation nowcaster pipeline."""
 
 from datetime import datetime, timedelta
-from unittest.mock import MagicMock, patch
 
 import numpy as np
 import pandas as pd
 import pytest
 
-from src.models.forecast import (ForecastConfig, ForecastResult,
-                                 InflationForecaster)
+from src.models.forecast import ForecastConfig, ForecastResult, InflationForecaster
 from src.models.nowcast import InflationNowcaster, NowcastConfig, NowcastResult
 from src.pipeline.etl import DataPipeline, PipelineConfig, PipelineMetrics
-from src.pipeline.validation import (DataValidator, ValidationConfig,
-                                     ValidationResult)
+from src.pipeline.validation import DataValidator, ValidationConfig, ValidationResult
 from src.scrapers.base import PriceData, RateLimiter, ScraperConfig
-from src.scrapers.retailers import (AmazonScraper, WalmartScraper,
-                                    create_scraper)
+from src.scrapers.retailers import AmazonScraper, WalmartScraper, create_scraper
 
 # ============================================================================
 # Fixtures
@@ -26,7 +22,7 @@ from src.scrapers.retailers import (AmazonScraper, WalmartScraper,
 def sample_price_data():
     """Create sample price data for testing."""
     np.random.seed(42)
-    dates = pd.date_range(start="2024-01-01", periods=100, freq="D")
+    dates = pd.date_range(end=pd.Timestamp.now(), periods=100, freq="D")
 
     data = []
     for date in dates:

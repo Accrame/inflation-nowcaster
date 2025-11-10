@@ -1,19 +1,15 @@
 """ETL pipeline for price data."""
 
-import os
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import pandas as pd
 from loguru import logger
 from pydantic import BaseModel, Field
 
 from src.pipeline.validation import DataValidator, ValidationResult
-from src.scrapers.base import PriceData
-from src.scrapers.retailers import AmazonScraper
-from src.scrapers.retailers import WalmartScraper
 from src.scrapers.retailers import create_scraper
 
 
@@ -22,7 +18,7 @@ class PipelineConfig(BaseModel):
 
     output_path: str = Field(default="./data/processed")
     raw_data_path: str = Field(default="./data/raw")
-    database_url: Optional[str] = None
+    database_url: str | None = None
     parquet_compression: str = "snappy"
     batch_size: int = Field(default=1000, ge=1)
     validate_data: bool = True
@@ -37,7 +33,7 @@ class PipelineMetrics:
     """Metrics collected during pipeline execution."""
 
     start_time: datetime = field(default_factory=datetime.utcnow)
-    end_time: Optional[datetime] = None
+    end_time: datetime | None = None
     records_extracted: int = 0
     records_transformed: int = 0
     records_loaded: int = 0

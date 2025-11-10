@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -132,7 +132,7 @@ class DataValidator:
             "product_name": (str, object),
         }
 
-        for column, expected_types in type_checks.items():
+        for column, _expected_types in type_checks.items():
             if column in df.columns:
                 # Check if column can be converted to expected type
                 try:
@@ -395,7 +395,7 @@ class GreatExpectationsValidator:
             return
 
         try:
-            import great_expectations as gx
+            import great_expectations as gx  # noqa: F401
 
             # Create expectation suite
             self._suite = self._context.add_expectation_suite(
@@ -464,7 +464,7 @@ class GreatExpectationsValidator:
             return {"success": False, "error": "Great Expectations not available"}
 
         try:
-            import great_expectations as gx
+            import great_expectations as gx  # noqa: F401
 
             # Create validator
             validator = self._context.sources.pandas_default.read_dataframe(df)

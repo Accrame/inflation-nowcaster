@@ -3,7 +3,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -50,7 +49,7 @@ class NowcastResult:
     category_contributions: dict[str, float] = field(default_factory=dict)
     observation_count: int = 0
     is_seasonally_adjusted: bool = False
-    comparison_with_cpi: Optional[dict[str, float]] = None
+    comparison_with_cpi: dict[str, float] | None = None
 
     def to_dict(self):
         """Convert to dictionary."""
@@ -79,9 +78,9 @@ class InflationNowcaster:
         """Initialize the inflation nowcaster."""
         self.config = config or NowcastConfig()
         self.weights = CPI_WEIGHTS
-        self._price_data: Optional[pd.DataFrame] = None
-        self._base_prices: Optional[pd.DataFrame] = None
-        self._seasonal_factors: Optional[dict[str, pd.Series]] = None
+        self._price_data: pd.DataFrame | None = None
+        self._base_prices: pd.DataFrame | None = None
+        self._seasonal_factors: dict[str, pd.Series] | None = None
 
     def load_data(self, data=None):
         """Load price data from file or DataFrame."""
@@ -420,7 +419,7 @@ class InflationNowcaster:
         nowcast = self.compute_nowcast(as_of_date)
 
         data = []
-        for category in self.weights.keys():
+        for category in self.weights:
             data.append(
                 {
                     "category": category,

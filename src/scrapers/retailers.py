@@ -3,11 +3,10 @@
 import random
 import re
 from datetime import datetime
-from urllib.parse import urljoin
 
 from loguru import logger
 
-from src.scrapers.base import PriceData, PriceScraper, ScraperConfig
+from src.scrapers.base import PriceScraper
 
 # CPI category mappings for normalization
 CPI_CATEGORIES = {
