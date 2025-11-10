@@ -11,16 +11,11 @@ Scrapes real-time retail prices to estimate inflation before official CPI releas
 5. **Airflow DAG** orchestrates the whole thing on a daily schedule
 6. **Streamlit dashboard** for visualization
 
-## Results (on synthetic data)
+## Pipeline outputs
 
-| Metric | Value |
-|--------|-------|
-| RMSE vs CPI | 0.12 pp |
-| Correlation | 0.94 |
-| Lead time | 2-3 weeks |
-| Directional accuracy | 87% |
+The backtesting framework is implemented but results depend heavily on data source quality. With the mock scrapers (hardcoded product catalogs), the pipeline runs end-to-end and produces forecasts, but the metrics aren't meaningful — you're basically forecasting data you generated yourself.
 
-These numbers are from backtesting on synthetic data, so take them with a grain of salt.
+With real price feeds, the literature suggests web-scraped price indices can lead official CPI by 2-3 weeks with reasonable accuracy. The value here is the pipeline architecture, not the mock data results.
 
 ## Setup
 
